@@ -1,7 +1,51 @@
 ﻿// See https://aka.ms/new-console-template for more information
-var result = 0;
-var input = File.ReadAllLines("inputdata2.txt");
+using System.Data;
+using System.Text.RegularExpressions;
 
+var result = 0;
+var input = File.ReadAllLines("inputdata.txt");
+var rules2 = input
+    .Where(s => s.Contains('|'))
+    .Select(p => p.Split('|')
+                .Select(i => int.Parse(i)))
+    .GroupBy( c => c.Last())
+    ;
+foreach (var group  in rules2.First())
+{
+    System.Console.WriteLine($"{group.First()}");
+}
+    var updates2 = input
+    .Where(s => s.Contains(','))
+    .Select(p => p.Split(',').Select( i => int.Parse(i)));
+
+System.Console.WriteLine($"rule Count: {rules2.Count()}");
+System.Console.WriteLine($"update Count: {updates2.Count()}");
+
+var result3= updates2.Aggregate(0, (sum, update) => sum+((
+    GoodUpdate(update,rules2)
+    )?update.ElementAt(update.Count()/2):0));
+
+Console.WriteLine($"Part 1 Result : {result3}");
+return;
+bool GoodUpdate(IEnumerable<int>update,IEnumerable<IGrouping<int,IEnumerable<int>>> rules)
+{
+    System.Console.WriteLine("checking update");
+    var previouspages = new List<int>();
+    foreach (var page in update)
+    {
+        //System.Console.WriteLine($"Checking if {page} ");
+
+        {           
+            foreach (var checkpage in previouspages)
+            {
+                System.Console.WriteLine($"Checking if {page} must be before {checkpage}");
+                if(rules.Any(g => g.Key==checkpage && g.Any(pp => pp.Contains( page)))) {System.Console.WriteLine("no"); return false;}
+            }
+            previouspages.Add(page);                
+        }
+    } 
+    return true;
+}
 //Read rules
 //Check updates and stored middle pages
 bool rulesdone = false;

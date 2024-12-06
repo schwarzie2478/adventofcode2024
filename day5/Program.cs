@@ -26,7 +26,7 @@ var result3= updates2.Aggregate(0, (sum, update) => sum+((
     )?update.ElementAt(update.Count()/2):0));
 
 Console.WriteLine($"Part 1 Result : {result3}");
-return;
+
 bool GoodUpdate(IEnumerable<int>update,IEnumerable<IGrouping<int,IEnumerable<int>>> rules)
 {
     System.Console.WriteLine("checking update");

@@ -1,0 +1,20 @@
+{
+    "$schema": "http://json.schemastore.org/template",
+    "author": "Stijn Peeters",
+    "classifications": [ "Common", "Console" ],
+    "identity": "AdventOfCode.Day",
+    "name": "Advent Of Code templates: minimal prep",
+    "shortName": "advent",
+    "sourceName":"adventcode",
+    "tags": {
+      "language": "C#",
+      "type": "project"
+    },
+    "preferNameDirectory":true,
+    "sources": [{
+      "rename": {
+        "MyTemplate": "ProjectName"
+      },
+      "target": "./"
+    }]
+  }

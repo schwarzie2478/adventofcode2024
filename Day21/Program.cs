@@ -3,7 +3,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Security.Permissions;
 using System.Text;
 
-var filename="inputdata.txt";
+var filename="inputdata2.txt";
 var input = File.ReadAllLines(filename);
 var result = 0;
 
@@ -27,7 +27,7 @@ foreach (var code in input)
     System.Console.WriteLine($"First  sequence becomes {seq1}");
     var seq2 = ReturnSequenceFor( dirpad,seq1);
     System.Console.WriteLine($"Second sequence becomes {seq2}");
-    var seq3 = ReturnSequenceFor( dirpad,seq2);
+    var seq3 = ReturnSequenceFor( dirpad,seq2,false,true);
     System.Console.WriteLine($"Third  sequence becomes {seq3}");
     var complexitymultiplier = Int32.Parse( code.Substring(0,code.Length-1));
 
@@ -37,7 +37,7 @@ foreach (var code in input)
 }
 
 Console.WriteLine($"Result part 1: {result}");
-string ReturnSequenceFor(char[,] pad, string code , bool keypad =false)
+string ReturnSequenceFor(char[,] pad, string code , bool keypad =false,bool human = false)
 {
 
     var currentposition = (keypad)?startingposition: startingdirection;
@@ -48,7 +48,7 @@ string ReturnSequenceFor(char[,] pad, string code , bool keypad =false)
     {
         //Determine new position
         var newposition = FindPosition(pad,token);
-        var sequence = MoveToPosition(currentposition,newposition,keypad);
+        var sequence = MoveToPosition(currentposition,newposition,keypad,human);
         wholesequence.Append(sequence);
         currentposition = newposition;
     }
@@ -71,7 +71,7 @@ string ReturnSequenceFor(char[,] pad, string code , bool keypad =false)
     }
     return (-1,-1);
 }
-string MoveToPosition((int,int)current, (int,int) next, bool keypad = false)
+string MoveToPosition((int,int)current, (int,int) next, bool keypad = false,bool human = false)
 {
     var seq = new StringBuilder();
     var seqh = new StringBuilder();
@@ -111,16 +111,16 @@ string MoveToPosition((int,int)current, (int,int) next, bool keypad = false)
 
     if(keypad)
     {
-        if( current.Item1==3)
+        if (current.Item1 == 3 && seqv.Length > 0 && seqv[0] == S)
         {
             seq.Append(seqh);
             seq.Append(seqv);
 
         }
-        else if (current.Item2==0)
+        else if (current.Item2==0 && seqv.Length > 0 && seqv[0]==S)
         {
-            seq.Append(seqh);
             seq.Append(seqv);
+            seq.Append(seqh);
            
         }
         else
@@ -128,13 +128,18 @@ string MoveToPosition((int,int)current, (int,int) next, bool keypad = false)
             seq.Append(seqv);            
             seq.Append(seqh);  
         }
-    }else
+    }else if(human)
+    {
+            seq.Append(seqv);            
+            seq.Append(seqh);         
+    }
+    else
     {
         if( current.Item1==1)
         {
             seq.Append(seqh);
             seq.Append(seqv);
-        }else if (current.Item2==0)
+        }else if (current.Item2== 0 && seqv[0] == N)
         {
             seq.Append(seqh);
             seq.Append(seqv);
@@ -150,6 +155,6 @@ string MoveToPosition((int,int)current, (int,int) next, bool keypad = false)
  
     seq.Append('A');
     var pad = (keypad)?numpad:dirpad;
-    //System.Console.WriteLine($"From current '{pad[current.Item1,current.Item2]}' to '{pad[next.Item1,next.Item2]}' we get {seq.ToString()}");
+    System.Console.WriteLine($"From current '{pad[current.Item1,current.Item2]}' to '{pad[next.Item1,next.Item2]}' we get {seq.ToString()}");
     return seq.ToString();    
 }

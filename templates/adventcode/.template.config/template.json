@@ -10,11 +10,5 @@
       "language": "C#",
       "type": "project"
     },
-    "preferNameDirectory":true,
-    "sources": [{
-      "rename": {
-        "MyTemplate": "ProjectName"
-      },
-      "target": "./"
-    }]
+    "preferNameDirectory":true
   }

@@ -3,7 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
 using Microsoft.VisualBasic;
 
-var filename="inputdata2.txt";
+var filename="inputdata.txt";
 var input = File.ReadAllLines(filename);
 var calculations = new Dictionary<long,long>();
 var modulos = new Dictionary<long,long>();

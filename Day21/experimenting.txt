@@ -1,0 +1,33 @@
+V<<A        <v<A
+^>>A        >>^A
+VA          vA
+^A          ^A
+V<<A        <vA
+^>>A        <A
+A           A
+V<A         >>^A
+<A          A
+^>>A        vA
+A           <^A
+VA          >A
+A           A
+^<A         vA
+>A          ^A
+V<A         <vA
+^>A         >^A
+A           A
+<A          <A
+>A          >A
+V<A         <v<A
+<A          >A
+^>>A        >^A
+A           A
+A           
+A
+VA          
+vA
+^<A         
+<^A
+>A          
+>A
+

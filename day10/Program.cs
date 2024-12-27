@@ -1,16 +1,23 @@
 ﻿// See https://aka.ms/new-console-template for more information
-var filename = "inputdata.txt";
+var filename = "inputdata2.txt";
 var input = File.ReadAllLines(filename);
-var dimension = input.Length;
+var dimension = input.Length+2;
 var grid = new int[dimension, dimension];
+for (int i = 0; i < dimension; i++)
+{
+    for (int j = 0; j < dimension; j++)
+    {
+        grid[j,i] = -1;
+    }
+}
 
-var x = 0;
-var y = 0;
+var x = 1;
+var y = 1;
 var trailheads = new List<(int, int)>();
 
 foreach (var line in input)
 {
-    y=0;
+    y=1;
     foreach (var step in line)
     {
         if (step == '0')
@@ -30,53 +37,40 @@ var trailends = new List<(int, int)>();
 foreach (var start in trailheads)
 {
     System.Console.WriteLine($"Looking for trailends starting from {start.Item1}{start.Item2}");
-    trailends.AddRange(LookForTrailEnds(0, start));
+    trailends.AddRange(Climb(start));
 }
 
 
-var result = trailends.Distinct().Count();
+var result = trailends.Count();
 Console.WriteLine($"Result part 1: {result}");
 
-IEnumerable<(int, int)> LookForTrailEnds(int height, (int, int) start)
+IEnumerable<(int,int)> Climb((int,int) current)
 {
-    System.Console.WriteLine($"Looking for trailends from height {height} from {start.Item1}{start.Item2}");
-    if (grid[start.Item1, start.Item2] == 9)
+    if(grid[current.Item1,current.Item2]==9)
     {
-        System.Console.WriteLine($"Trail end found: {start.Item1}{start.Item2}");
-        return new List<(int, int)> { start };
+        return new[] {current};
     }
 
-    var trailends = new List<(int, int)>();
-
-    if (start.Item1 > 1 && grid[start.Item1, start.Item2] == grid[start.Item1 - 1, start.Item2] - 1)
+    int currentstep = grid[current.Item1,current.Item2];
+    int next = currentstep+1;
+    var fromhere = new List<(int,int)>();
+    //fromhere.Add(current);
+    if( grid[current.Item1 + 1, current.Item2] == next)
     {
-        System.Console.WriteLine("Looking higher");
-        var nextheight = grid[start.Item1 - 1, start.Item2];
-        trailends.AddRange(LookForTrailEnds(nextheight, (start.Item1 - 1, start.Item2)));
+        fromhere.AddRange(Climb( (current.Item1 + 1, current.Item2)));
     }
-
-    if (start.Item2 > 1 && grid[start.Item1, start.Item2] == grid[start.Item1, start.Item2 - 1] - 1)
+     if( grid[current.Item1 - 1, current.Item2] == next)
     {
-        System.Console.WriteLine("Looking lower");
-
-        var nextheight = grid[start.Item1, start.Item2 - 1];
-        trailends.AddRange(LookForTrailEnds(nextheight, (start.Item1, start.Item2 + 1)));
+        fromhere.AddRange(Climb( (current.Item1 - 1, current.Item2)));
     }
-
-    if (start.Item1 < dimension - 1 && grid[start.Item1, start.Item2] == grid[start.Item1 = 1, start.Item2] - 1)
+     if( grid[current.Item1, current.Item2 + 1] == next)
     {
-        System.Console.WriteLine("Looking left");
-
-        var nextheight = grid[start.Item1 + 1, start.Item2];
-        trailends.AddRange(LookForTrailEnds(nextheight, (start.Item1 + 1, start.Item2)));
+        fromhere.AddRange(Climb( (current.Item1, current.Item2 + 1)));
+    }
+     if( grid[current.Item1 , current.Item2- 1] == next)
+    {
+        fromhere.AddRange(Climb( (current.Item1, current.Item2 - 1)));
     }
     
-    if (start.Item2 < dimension - 1 && grid[start.Item1, start.Item2] == grid[start.Item1, start.Item2 + 1] - 1)
-    {
-        System.Console.WriteLine("Looking right");
-        var nextheight = grid[start.Item1, start.Item2 + 1];
-        trailends.AddRange(LookForTrailEnds(nextheight, (start.Item1, start.Item2 + 1)));
-    }
-
-    return trailends;
+    return fromhere;
 }
